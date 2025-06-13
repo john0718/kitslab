@@ -1,0 +1,156 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Reset LDAP Password</title>
+    <link rel="icon" type="image/png" href="https://karunya.edu/sites/default/files/img/home/KITS-EMBLEM.png.pagespeed.ce.hVclQGVmrR.png">
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            padding: 30px;
+        }
+        .error {
+            color: red;
+            margin-bottom: 20px;
+        }
+        .form-container {
+            max-width: 400px;
+            padding: 20px;
+            border: 1px solid #ccc;
+            border-radius: 10px;
+            background-color: #f9f9f9;
+            margin-left:35%;
+            margin-top:15%;
+        }
+        h2 {
+            margin-top: 0;
+        }
+        button {
+            background-color: #4285f4;
+            color: white;
+            border: none;
+            padding: 10px 15px;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+        button:hover {
+            background-color: #3367d6;
+        }
+    </style>
+</head>
+<body>
+    {% if message %}
+    <div id="resetSuccessModal" class="modal" style="display:block;">
+      <div class="modal-content" style="padding: 20px; border: 1px solid #ccc; background: #fff;">
+        <p style="color: green;">{{ message }}</p>
+        <button onclick="document.getElementById('resetSuccessModal').style.display='none'">Close</button>
+      </div>
+    </div>
+  {% endif %}
+<div class="form-container">
+    <h2>Set New Password</h2>
+
+    {% if error %}
+        <div class="error">{{ error }}</div>
+    {% endif %}
+
+    <form method="post">
+        {% csrf_token %}
+        {{ form.as_p }}
+        <button type="submit">Reset Password</button>
+    </form>
+</div>
+
+</body>
+</html> 
+
+
+
+
+{% comment %} 
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Reset LDAP Password</title>
+    <link rel="icon" type="image/png" href="https://karunya.edu/sites/default/files/img/home/KITS-EMBLEM.png.pagespeed.ce.hVclQGVmrR.png">
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            padding: 30px;
+        }
+        .error {
+            color: red;
+            margin-bottom: 20px;
+        }
+        .form-container {
+            max-width: 400px;
+            padding: 20px;
+            border: 1px solid #ccc;
+            border-radius: 10px;
+            background-color: #f9f9f9;
+            margin-left: 35%;
+            margin-top: 10%;
+        }
+        h2 {
+            margin-top: 0;
+        }
+        label {
+            font-weight: bold;
+            display: block;
+            margin-top: 10px;
+        }
+        input[type="password"] {
+            width: 100%;
+            padding: 8px;
+            margin-top: 5px;
+            margin-bottom: 15px;
+            box-sizing: border-box;
+        }
+        button {
+            background-color: #4285f4;
+            color: white;
+            border: none;
+            padding: 10px 15px;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+        button:hover {
+            background-color: #3367d6;
+        }
+    </style>
+</head>
+<body>
+
+{% if message %}
+<div id="resetSuccessModal" class="modal" style="display:block;">
+    <div class="modal-content" style="padding: 20px; border: 1px solid #ccc; background: #fff;">
+        <p style="color: green;">{{ message }}</p>
+        <button onclick="document.getElementById('resetSuccessModal').style.display='none'">Close</button>
+    </div>
+</div>
+{% endif %}
+
+<div class="form-container">
+    <h2>Set New Password</h2>
+
+    {% if error %}
+        <div class="error">{{ error }}</div>
+    {% endif %}
+
+    <form method="post">
+        {% csrf_token %}
+
+        <label for="{{ form.old_password.id_for_label }}">Current Password:</label>
+        {{ form.old_password }}
+
+        <label for="{{ form.new_password1.id_for_label }}">New Password:</label>
+        {{ form.new_password1 }}
+
+        <label for="{{ form.new_password2.id_for_label }}">Confirm New Password:</label>
+        {{ form.new_password2 }}
+
+        <button type="submit">Reset Password</button>
+    </form>
+</div>
+
+</body>
+</html> {% endcomment %}

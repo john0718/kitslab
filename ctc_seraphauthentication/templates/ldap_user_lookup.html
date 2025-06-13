@@ -1,0 +1,18 @@
+<h2>Lookup LDAP User by Email</h2>
+
+<form method="post">
+  {% csrf_token %}
+  <label>Email:</label>
+  <input type="email" name="email" required>
+  <button type="submit">Search</button>
+</form>
+
+{% if dn %}
+  <h3>Distinguished Name:</h3>
+  <pre>{{ dn }}</pre>
+
+  <h3>Attributes:</h3>
+  <pre>{{ attributes }}</pre>
+{% elif error %}
+  <p style="color:red;">{{ error }}</p>
+{% endif %}

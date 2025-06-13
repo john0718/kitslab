@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html lang="en">
+   <head>
+      <meta charset="UTF-8">
+      <meta name="viewport" content="width=device-width, initial-scale=1.0">
+      <title>CTC | Karunya Examination</title>
+      <link rel="icon" type="image/png" href="https://karunya.edu/sites/default/files/img/home/KITS-EMBLEM.png.pagespeed.ce.hVclQGVmrR.png">
+      <style>
+         body {
+         font-family: Arial, sans-serif;
+         display: flex;
+         flex-direction: column;
+         justify-content: center;
+         align-items: center;
+         height: 100vh;
+         margin: 0;
+         background: linear-gradient(45deg, #967b94, #5289a3, #9c4f76, #6dc48e);
+         background-size: 400%; 
+         animation: gradientAnimation 15s ease infinite; 
+         }
+         @keyframes gradientAnimation {
+         0% {
+         background-position: 0% 50%;
+         }
+         50% {
+         background-position: 100% 50%;
+         }
+         100% {
+         background-position: 0% 50%;
+         }
+         }
+         #time, #date {
+         color: #fff;
+         font-size: 10em;
+         padding: 20px;
+         border-radius: 10px;
+         text-align: center;
+         margin-bottom: 20px;
+         }
+         #date {
+         font-size: 7em; 
+         }
+         #logo {
+         width: 150px; 
+         margin-bottom: 20px;
+         }
+         #seconds-digits {
+         display: inline-block;
+         animation: pulse 1s ease-in-out infinite;
+         }
+         @keyframes pulse {
+         0% { transform: scale(1); opacity: 0.7; }
+         50% { transform: scale(1.05); opacity: 1; }
+         100% { transform: scale(1); opacity: 0.7; }
+         }
+      </style>
+   </head>
+   <body>
+      <div class="row"><img id="logo" src="https://karunya.edu/sites/default/files/img/home/KITS-EMBLEM.png.pagespeed.ce.hVclQGVmrR.png" alt="Karunya Logo"></div>
+      <div class="row">
+         <div id="date"></div>
+      </div>
+      <div class="row">
+         <div id="time"><span id="hours-minutes"></span><span id="seconds-digits"></span><span id="ampm"></span></div>
+      </div>
+      <script>
+         function updateTimeAndDate() {
+             const options = {
+                 timeZone: 'Asia/Kolkata',
+                 hour: '2-digit',
+                 minute: '2-digit',
+                 second: '2-digit',
+                 hour12: true
+             };
+             const dateOptions = {
+                 timeZone: 'Asia/Kolkata',
+                 year: 'numeric',
+                 month: 'long',
+                 day: 'numeric'
+             };
+             const date = new Date();
+             const timeParts = date.toLocaleTimeString('en-US', options).split(':');
+             const seconds = timeParts[2].split(' ')[0];
+             const ampm = timeParts[2].split(' ')[1];
+             document.getElementById('hours-minutes').textContent = `${timeParts[0]}:${timeParts[1]}:`;
+             document.getElementById('seconds-digits').textContent = `${seconds}`;
+             document.getElementById('ampm').textContent = ` ${ampm}`;
+             document.getElementById('date').textContent = `${date.toLocaleDateString('en-US', dateOptions)}`;
+         }
+         
+         function handleKeyPress(event) {
+             if (event.key === 'F5') {
+                 event.preventDefault();
+                 if (!document.fullscreenElement) {
+                     document.documentElement.requestFullscreen().catch(err => {
+                         console.error(`Error attempting to enable fullscreen: ${err.message}`);
+                     });
+                 }
+             } else if (event.key === 'Escape' && document.fullscreenElement) {
+                 document.exitFullscreen();
+             }
+         }
+         
+         document.addEventListener('keydown', handleKeyPress);
+         
+         updateTimeAndDate();
+         setInterval(updateTimeAndDate, 1000);
+      </script>
+   </body>
+</html>

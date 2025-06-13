@@ -1,0 +1,168 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Login - KITS Lab</title>
+    <link rel="icon" type="image/png" href="https://karunya.edu/sites/default/files/img/home/KITS-EMBLEM.png.pagespeed.ce.hVclQGVmrR.png">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">  
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background: #f4f6f8;
+            margin: 0;
+        }
+
+        .login-wrapper {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            padding: 20px; /* mobile spacing */
+        }
+
+        .login-box {
+            background: white;
+            padding: 30px;
+            border-radius: 10px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            width: 100%;
+            max-width: 350px;
+        }
+
+        .login-box h2 {
+            margin-bottom: 20px;
+            text-align: center;
+        }
+
+        .form-group {
+            margin-bottom: 15px;
+        }
+
+        .form-group label {
+            font-weight: bold;
+        }
+
+        .form-group input {
+            width: 100%;
+            padding: 10px;
+            margin-top: 5px;
+            box-sizing: border-box;
+        }
+
+        .btn-login {
+            background-color: #1a73e8;
+            color: white;
+            width: 100%;
+            padding: 10px;
+            border: none;
+            border-radius: 5px;
+        }
+
+        .btn-login:hover {
+            background-color: #0c5dc0;
+        }
+
+        .error {
+            color: red;
+            text-align: center;
+            margin-bottom: 10px;
+        }
+        .text-center img {
+            display: inline-block;
+            margin-bottom: 10px;
+        }
+    </style>
+</head>
+<body>
+
+ <div class="login-wrapper">
+
+    <div class="login-box">
+    <center>
+        <div class="text-center mb-4">
+            <img src="{% static 'images/CTC_logo.png' %}" alt="CTC_logo" style="height: 80px;">
+        </div>
+    </center>
+
+    {% if user.is_authenticated %}
+        <form method="post" action="{% url 'logout' %}" style="margin-bottom: 15px;">
+            {% csrf_token %}
+            <button type="submit" class="btn-login" style="background-color: red;">Logout</button>
+        </form>
+    {% endif %}
+
+    {% if form.errors %}
+        <div class="error">Invalid username or password</div>
+    {% endif %}
+    
+    <form method="post" action="{% url 'login' %}">
+        {% csrf_token %}
+        <input type="hidden" name="next" value="{{ request.GET.next }}">
+        <div class="form-group">
+            <label for="id_username">Username</label>
+            <input type="text" name="username" id="id_username" required>
+        </div>
+        <div class="form-group">
+            <label for="id_password">Password</label>
+            <input type="password" name="password" id="id_password" required>
+        </div>
+        <button type="submit" class="btn-login">Login</button></br>
+        <p> Note: Login with Seraph Credentials </p>
+    </form>
+</div>
+
+    {% comment %} <div class="login-box">
+        <center><div class="text-center mb-4">
+            <img src="{% static 'images/CTC_logo.png' %}" alt="CTC_logo" style="height: 80px;">
+        </div></center>
+        
+        {% if form.errors %}
+            <div class="error">Invalid username or password</div>
+        {% endif %}
+        <form method="post" action="{% url 'login' %}">
+            {% csrf_token %}
+            <input type="hidden" name="next" value="{{ request.GET.next }}">
+            <div class="form-group">
+                <label for="id_username">Username</label>
+                <input type="text" name="username" id="id_username" required>
+            </div>
+            <div class="form-group">
+                <label for="id_password">Password</label>
+                <input type="password" name="password" id="id_password" required>
+            </div>
+            <button type="submit" class="btn-login">Login</button></br>
+            <p> Note: Login with Seraph Credentials </p>
+        </form> {% endcomment %}
+
+
+
+        {% comment %} <form method="post" action="{% url 'login' %}">
+            {% csrf_token %}
+            <div class="form-group">
+                <label for="id_username">Username</label>
+                <input type="text" name="username" id="id_username" required>
+            </div>
+            <div class="form-group">
+                <label for="id_password">Password</label>
+                <input type="password" name="password" id="id_password" required>
+            </div>
+            <button type="submit" class="btn-login">Login</button></br>
+            <p> Note: Login with Seraph Credentials </p>
+        </form> {% endcomment %}
+    {% comment %} </div> {% endcomment %}
+{% comment %} </div>  {% endcomment %}
+{% comment %} 
+<div class="login-wrapper">
+    <div class="login-box">
+        <center><div class="text-center mb-4">
+            <img src="{% static 'images/CTC_logo.png' %}" alt="CTC_logo" style="height: 80px;">
+        </div></center>
+
+        
+        <h4>Login has been closed as the time window for lab allotment has ended. For assistance, please contact the CTC office.</h4>
+    </div>
+</div> {% endcomment %}
+
+</body>
+</html>

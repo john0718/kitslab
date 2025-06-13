@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <link rel="icon" type="image/png" href="https://karunya.edu/sites/default/files/img/home/KITS-EMBLEM.png.pagespeed.ce.hVclQGVmrR.png">
+    <title>Seraph LDAP Password Reset</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            padding: 30px;
+        }
+        .form-container {
+            max-width: 400px;
+            padding: 20px;
+            border: 1px solid #ccc;
+            border-radius: 10px;
+            background-color: #f9f9f9;
+            margin-left:35%;
+            margin-top:15%;
+        }
+        h2 {
+            margin-top: 0;
+        }
+        button {
+            background-color: #4285f4;
+            color: white;
+            border: none;
+            padding: 10px 15px;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+        button:hover {
+            background-color: #3367d6;
+        }
+    </style>
+</head>
+<body>
+    {% if message %}
+    <div id="resetSuccessModal" class="modal" style="display:block;">
+      <div class="modal-content" style="padding: 20px; border: 1px solid #ccc; background: #fff;">
+        <p style="color: green;">{{ message }}</p>
+        <button onclick="document.getElementById('resetSuccessModal').style.display='none'">Close</button>
+      </div>
+    </div>
+  {% endif %}
+<div class="form-container">
+    <h2>Seraph Password Reset</h2>
+    <form method="post">
+        {% csrf_token %}
+        {{ form.as_p }}
+        <button type="submit">Send Reset Link</button>
+    </form>
+</div>
+
+</body>
+</html>
