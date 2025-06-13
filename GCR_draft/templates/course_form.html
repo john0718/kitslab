@@ -1,0 +1,923 @@
+{% extends "faculty/base.html" %}
+{% load static %}
+
+{% block content %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="icon" type="image/png" href="https://karunya.edu/sites/default/files/img/home/KITS-EMBLEM.png.pagespeed.ce.hVclQGVmrR.png">
+    <title>GCR Allocation</title>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            {% comment %} font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); {% endcomment %}
+            min-height: 100vh;
+            padding: 20px;
+            line-height: 1.6;
+        }
+
+        .container {
+            max-width: 1300px;
+            width: 95%; 
+            {% comment %} max-width: 100%; {% endcomment %}
+            
+            margin: 0 auto;
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            border-radius: 20px;
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
+            overflow: hidden;
+            min-height: calc(100vh - 40px);
+        }
+
+        .header {
+            background: linear-gradient(135deg, #2c3e50 0%, #3498db 100%);
+            color: white;
+            padding: 30px;
+            text-align: center;
+            position: relative;
+        }
+
+        .header::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><defs><pattern id="grain" width="100" height="100" patternUnits="userSpaceOnUse"><circle cx="50" cy="50" r="1" fill="rgba(255,255,255,0.1)"/></pattern></defs><rect width="100" height="100" fill="url(%23grain)"/></svg>');
+            opacity: 0.3;
+        }
+
+        .header h1 {
+            font-size: 2.2rem;
+            font-weight: 700;
+            margin-bottom: 8px;
+            position: relative;
+            z-index: 1;
+        }
+
+        .header p {
+            font-size: 1rem;
+            opacity: 0.9;
+            position: relative;
+            z-index: 1;
+        }
+
+        .form-container {
+            padding: 30px;
+        }
+
+        .form-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 25px;
+            margin-bottom: 25px;
+            align-items: start;
+        }
+
+        .form-section {
+            background: white;
+            padding: 25px;
+            border-radius: 15px;
+            box-shadow: 0 5px 20px rgba(0, 0, 0, 0.08);
+            border: 1px solid rgba(0, 0, 0, 0.05);
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+            height: fit-content;
+        }
+
+        .form-section:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.15);
+        }
+
+        .section-title {
+            font-size: 1.2rem;
+            font-weight: 600;
+            color: #2c3e50;
+            margin-bottom: 18px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .section-title i {
+            color: #3498db;
+        }
+
+        .form-group {
+            margin-bottom: 18px;
+        }
+
+        .form-group.full-width {
+            grid-column: 1 / -1;
+        }
+
+        .schedule-section {
+            grid-column: 1 / -1;
+            margin-top: 20px;
+        }
+
+        label {
+            display: block;
+            font-weight: 600;
+            color: #34495e;
+            margin-bottom: 8px;
+            font-size: 0.95rem;
+        }
+
+        .required {
+            color: #e74c3c;
+        }
+
+        input, select, textarea {
+            width: 100%;
+            padding: 12px 16px;
+            border: 2px solid #e0e0e0;
+            border-radius: 8px;
+            font-size: 1rem;
+            transition: all 0.3s ease;
+            background: #fafafa;
+        }
+
+        input:focus, select:focus, textarea:focus {
+            outline: none;
+            border-color: #3498db;
+            background: white;
+            box-shadow: 0 0 0 3px rgba(52, 152, 219, 0.1);
+            transform: translateY(-2px);
+        }
+
+        select {
+            cursor: pointer;
+            appearance: none;
+            background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 20 20'%3e%3cpath stroke='%236b7280' stroke-linecap='round' stroke-linejoin='round' stroke-width='1.5' d='M6 8l4 4 4-4'/%3e%3c/svg%3e");
+            background-position: right 12px center;
+            background-repeat: no-repeat;
+            background-size: 16px;
+            padding-right: 40px;
+        }
+
+        textarea {
+            resize: vertical;
+            min-height: 100px;
+        }
+
+        .submit-section {
+            text-align: center;
+            margin-top: 40px;
+            padding-top: 30px;
+            padding-bottom:30px;
+            border-top: 2px solid #ecf0f1;
+        }
+
+        .submit-btn {
+            background: linear-gradient(135deg, #3498db 0%, #2980b9 100%);
+            color: white;
+            border: none;
+            padding: 15px 40px;
+            font-size: 1.1rem;
+            font-weight: 600;
+            border-radius: 50px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 0 5px 15px rgba(52, 152, 219, 0.3);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .submit-btn::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.3), transparent);
+            transition: left 0.5s;
+        }
+
+        .submit-btn:hover::before {
+            left: 100%;
+        }
+
+        .submit-btn:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 8px 25px rgba(52, 152, 219, 0.4);
+        }
+
+        .submit-btn:active {
+            transform: translateY(-1px);
+        }
+
+        .input-icon {
+            position: relative;
+        }
+
+        .input-icon i {
+            position: absolute;
+            left: 12px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: #7f8c8d;
+            z-index: 1;
+        }
+
+        .input-icon input {
+            padding-left: 40px;
+        }
+
+        @media (max-width: 1200px) {
+            .form-grid {
+                grid-template-columns: repeat(2, 1fr);
+                gap: 20px;
+            }
+        }
+
+        @media (max-width: 768px) {
+            body {
+                padding: 10px;
+            }
+            
+            .container {
+                width: 100%;
+                border-radius: 15px;
+            }
+            
+            .form-container {
+                padding: 20px 15px;
+            }
+            
+            .form-grid {
+                grid-template-columns: 1fr;
+                gap: 15px;
+            }
+            
+            .header {
+                padding: 25px 20px;
+            }
+            
+            .header h1 {
+                font-size: 1.8rem;
+            }
+            
+            .form-section {
+                padding: 20px;
+            }
+        }
+
+        @media (max-width: 480px) {
+            body {
+                padding: 10px;
+            }
+            
+            .header h1 {
+                font-size: 1.8rem;
+            }
+            
+            .form-container {
+                padding: 20px 15px;
+            }
+        }
+
+        .progress-bar {
+            height: 4px;
+            background: linear-gradient(90deg, #3498db, #2980b9);
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            transform: scaleX(0);
+            transform-origin: left;
+            animation: progressLoad 2s ease-out forwards;
+        }
+
+        @keyframes progressLoad {
+            to {
+                transform: scaleX(1);
+            }
+        }
+
+        .fade-in {
+            opacity: 0;
+            transform: translateY(20px);
+            animation: fadeInUp 0.6s ease-out forwards;
+        }
+
+        @keyframes fadeInUp {
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .form-section:nth-child(1) { animation-delay: 0.1s; }
+        .form-section:nth-child(2) { animation-delay: 0.2s; }
+        .form-section:nth-child(3) { animation-delay: 0.3s; }
+        .form-section:nth-child(4) { animation-delay: 0.4s; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        {% comment %} <div class="header">
+            <h1><i class="fas fa-graduation-cap"></i> GCR Allocation</h1>
+            <p>Please fill in all the required information to register your course</p>
+            <div class="progress-bar"></div>
+        </div> {% endcomment %}
+
+        <div class="form-container">
+            <form method="post" id="courseForm">
+                <!-- CSRF Token (Django) -->
+                {% csrf_token %}
+                
+                <div class="form-grid">
+                    <!-- Academic Information Section -->
+                    <div class="form-section fade-in">
+                        <h3 class="section-title">
+                            <i class="fas fa-university"></i>
+                            Academic Information
+                        </h3>
+                        
+                        <div class="form-group">
+                            <label for="school">School <span class="required">*</span></label>
+                             <select name="school" id="school" required>
+                                  <option value="">Select School</option>
+                                  <option value="SET">School of Engineering and Technology</option>
+                                  <option value="SCST">School of Computer Science and Technology</option>
+                                  <option value="SAMM">School of Sciences Arts Media and Management</option>
+                                  <option value="SABS">School of Agriculture and Bio Sciences</option>
+                              </select>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="division">Division <span class="required">*</span></label>
+                            <select name="division" id="division" required>
+                                <option value="">Select Division</option>
+                                <option value="aerospace">Aerospace Engineering</option>
+                                <option value="agriculture">Agriculture</option>
+                                <option value="bioinformatics">Bioinformatics</option>
+                                <option value="biotechnology">Biotechnology</option>
+                                <option value="chemistry">Chemistry</option>
+                                <option value="civil">Civil Engineering</option>
+                                <option value="commerce">Commerce</option>
+                                <option value="cse">Computer Science and Engineering</option>
+                                <option value="aiml">Artificial Intelligence and Machine Learning</option>
+                                <option value="dscs">Data Science and Cyber Security</option>
+                                <option value="eee">Electrical and Electronics Engineering</option>
+                                <option value="ece">Electronics and Communication Engineering</option>
+                                <option value="robotics">Robotics</option>
+                                <option value="biomedical">Biomedical Engineering</option>
+                                <option value="english">English</option>
+                                <option value="food-processing">Food Processing</option>
+                                <option value="it">Information Technology</option>
+                                <option value="management">Management Studies</option>
+                                <option value="mathematics">Mathematics</option>
+                                <option value="mechanical">Mechanical Engineering</option>
+                                <option value="media">Media and Communication</option>
+                                <option value="nano">Nano Sciences</option>
+                                <option value="physics">Physics</option>
+                                <option value="value-education">Value Education</option>
+                                <option value="water">Water Institute</option>
+                                <option value="isdf">ISDF</option>
+                                <option value="computer-application">Computer Application</option>
+                                <option value="criminology">Criminology</option>
+                                <option value="digital-sciences">Digital Sciences</option>
+                                <option value="data-analytics">Data Science and Analytics</option>
+                                <option value="clinical-psychology">Clinical Psychology</option>
+                                <option value="others">Others</option>
+                            </select>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="branch">Branch <span class="required">*</span></label>
+                            <select name="branch" id="branch" required>
+                                <option value="">Select Branch</option>
+                                <option value="aerospace">Aerospace Engineering</option>
+                                <option value="agriculture">Agriculture</option>
+                                <option value="bioinformatics">Bioinformatics</option>
+                                <option value="biotechnology">Biotechnology</option>
+                                <option value="chemistry">Chemistry</option>
+                                <option value="civil">Civil Engineering</option>
+                                <option value="commerce">Commerce</option>
+                                <option value="cse">Computer Science and Engineering</option>
+                                <option value="aiml">Artificial Intelligence and Machine Learning</option>
+                                <option value="dscs">Data Science and Cyber Security</option>
+                                <option value="eee">Electrical and Electronics Engineering</option>
+                                <option value="ece">Electronics and Communication Engineering</option>
+                                <option value="robotics">Robotics</option>
+                                <option value="biomedical">Biomedical Engineering</option>
+                                <option value="english">English</option>
+                                <option value="food-processing">Food Processing</option>
+                                <option value="it">Information Technology</option>
+                                <option value="management">Management Studies</option>
+                                <option value="mathematics">Mathematics</option>
+                                <option value="mechanical">Mechanical Engineering</option>
+                                <option value="media">Media and Communication</option>
+                                <option value="nano">Nano Sciences</option>
+                                <option value="physics">Physics</option>
+                                <option value="value-education">Value Education</option>
+                                <option value="water">Water Institute</option>
+                                <option value="isdf">ISDF</option>
+                                <option value="computer-application">Computer Application</option>
+                                <option value="criminology">Criminology</option>
+                                <option value="digital-sciences">Digital Sciences</option>
+                                <option value="data-analytics">Data Science and Analytics</option>
+                                <option value="clinical-psychology">Clinical Psychology</option>
+                                <option value="others">Others</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <!-- Course Level Information -->
+                    <div class="form-section fade-in">
+                        <h3 class="section-title">
+                            <i class="fas fa-layer-group"></i>
+                            Course Level
+                        </h3>
+                        
+                        <div class="form-group">
+                            <label for="degree">Degree <span class="required">*</span></label>
+                            <select name="degree" id="degree" required>
+                                <option value="">Select Degree</option>
+                                <option value="btech">B.Tech</option>
+                                <option value="mtech">M.Tech</option>
+                                <option value="bcom">B.Com</option>
+                                <option value="bca">BCA</option>
+                                <option value="bsc">B.Sc</option>
+                                <option value="ba">B.A</option>
+                                <option value="ma">M.A</option>
+                                <option value="mba">MBA</option>
+                                <option value="msc">M.Sc</option>
+                                <option value="research">Research</option>
+                                <option value="others">Others</option>
+                            </select>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="year">Year <span class="required">*</span></label>
+                            <select name="year" id="year" required>
+                                <option value="">Select Year</option>
+                                <option value="1">I year</option>
+                                <option value="2">II year</option>
+                                <option value="3">III year</option>
+                                <option value="4">IV year</option>
+                                <option value="5">V year</option>
+                            </select>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="semester">Semester <span class="required">*</span></label>
+                            <select name="semester" id="semester" required>
+                                <option value="">Select Semester</option>
+                                <option value="1">1</option>
+                                <option value="2">2</option>
+                                <option value="3">3</option>
+                                <option value="4">4</option>
+                                <option value="5">5</option>
+                                <option value="6">6</option>
+                                <option value="7">7</option>
+                                <option value="8">8</option>
+                                <option value="9">9</option>
+                                <option value="10">10</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <!-- Course Details -->
+                    <div class="form-section fade-in">
+                        <h3 class="section-title">
+                            <i class="fas fa-book-open"></i>
+                            Course Details
+                        </h3>
+                        
+                        <div class="form-group">
+                            <label for="course_code">Course Code <span class="required">*</span></label>
+                            <input type="text" name="course_code" id="course_code" placeholder="e.g., CS101" required>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="course_name">Course Name <span class="required">*</span></label>
+                            <input type="text" name="course_name" id="course_name" placeholder="e.g., Introduction to Programming" required>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="credits">Credits <span class="required">*</span></label>
+                            <select name="credits" id="credits" required>
+                                <option value="">Select Credits</option>
+                                <option value="0.5">0.5</option>
+                                <option value="1">1</option>
+                                <option value="1.5">1.5</option>
+                                <option value="2">2</option>
+                                <option value="2.5">2.5</option>
+                                <option value="3">3</option>
+                                <option value="4">4</option>
+                                <option value="others">Others</option>
+                            </select>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="batch_no">Batch No <span class="required">*</span></label>
+                            <select name="batch_no" id="batch_no" required>
+                                <option value="">Select Batch</option>
+                                <option value="1">1</option>
+                                <option value="2">2</option>
+                                <option value="3">3</option>
+                                <option value="4">4</option>
+                                <option value="5">5</option>
+                            </select>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="course_type">Course Type <span class="required">*</span></label>
+                            <select name="course_type" id="course_type" required>
+                                <option value="">Select Type</option>
+                                <option value="theory">Theory</option>
+                                <option value="practical">Practical</option>
+                                <option value="placement">Placement</option>
+                            </select>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="mode">Mode <span class="required">*</span></label>
+                            <select name="mode" id="mode" required>
+                                <option value="">Select Mode</option>
+                                <option value="offline">Offline</option>
+                                <option value="blended">Blended</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <!-- Faculty Information -->
+                    <div class="form-section fade-in">
+                        <h3 class="section-title">
+                            <i class="fas fa-chalkboard-teacher"></i>
+                            Faculty Information
+                        </h3>
+                        
+                        <div class="form-group">
+                            <label for="faculty_id">Faculty ID <span class="required">*</span></label>
+                            <div class="input-icon">
+                                <i class="fas fa-id-card"></i>
+                                <input type="text" name="faculty_id" id="faculty_id" placeholder="Enter Faculty ID" required>
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="faculty_name">Faculty Name <span class="required">*</span></label>
+                            <div class="input-icon">
+                                <i class="fas fa-user"></i>
+                                <input type="text" name="faculty_name" id="faculty_name" placeholder="Enter Full Name" required>
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="faculty_contact">Faculty Contact Number <span class="required">*</span></label>
+                            <div class="input-icon">
+                                <i class="fas fa-phone"></i>
+                                <input type="tel" name="faculty_contact_number" id="faculty_contact_number" placeholder="Enter Number" required>
+
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="faculty_email">Faculty Email ID <span class="required">*</span></label>
+                            <div class="input-icon">
+                                <i class="fas fa-envelope"></i>
+                                <input type="email" name="faculty_email" id="faculty_email" placeholder="faculty@karunya.edu" required>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                </div>
+
+                <!-- Full Width Section for Timetable -->
+                <div class="form-section schedule-section fade-in">
+                    <h3 class="section-title">
+                        <i class="fas fa-clock"></i>
+                        Schedule Information
+                    </h3>
+                    
+                    <div class="form-group">
+                        <label for="timetable">Time Table (Day-Hour) <span class="required">*</span></label>
+                        <textarea name="timetable" id="timetable" placeholder="Example:&#10;Monday: 9:00 AM - 10:00 AM&#10;Wednesday: 2:00 PM - 3:00 PM&#10;Friday: 11:00 AM - 12:00 PM" required></textarea>
+                    </div>
+                </div>
+
+                <div class="submit-section">
+                    <button type="submit" class="submit-btn">
+                        <i class="fas fa-paper-plane"></i>
+                        Submit Course Details
+                    </button>
+
+                
+            </form>
+        </div>
+    </div>
+
+    <script>
+        // Form validation and enhancement
+        document.getElementById('courseForm').addEventListener('submit', function(e) {
+            
+            
+            // Simple form validation
+            const requiredFields = document.querySelectorAll('[required]');
+            let isValid = true;
+            
+            requiredFields.forEach(field => {
+                if (!field.value.trim()) {
+                    field.style.borderColor = '#e74c3c';
+                    isValid = false;
+                } else {
+                    field.style.borderColor = '#27ae60';
+                }
+            });
+            
+            if (isValid) {
+                // Show success message
+                const submitBtn = document.querySelector('.submit-btn');
+                submitBtn.innerHTML = '<i class="fas fa-check"></i> Form Submitted Successfully!';
+                submitBtn.style.background = 'linear-gradient(135deg, #27ae60 0%, #2ecc71 100%)';
+                
+                // In a real application, you would submit the form here
+                console.log('Form submitted successfully!');
+                
+                // Reset button after 3 seconds
+                setTimeout(() => {
+                    submitBtn.innerHTML = '<i class="fas fa-paper-plane"></i> Submit Course Details';
+                    submitBtn.style.background = 'linear-gradient(135deg, #3498db 0%, #2980b9 100%)';
+                }, 3000);
+            } else {
+                // Show error message
+                alert('Please fill in all required fields.');
+            }
+        });
+
+        // Phone number formatting
+        document.getElementById('faculty_contact').addEventListener('input', function(e) {
+            let value = e.target.value.replace(/\D/g, '');
+            if (value.length > 10) value = value.substr(0, 10);
+            if (value.length > 5) {
+                value = value.substr(0, 5) + ' ' + value.substr(5);
+            }
+            e.target.value = value;
+        });
+
+        // Email validation
+        document.getElementById('faculty_email').addEventListener('blur', function(e) {
+            const email = e.target.value;
+            const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+            
+            if (email && !emailRegex.test(email)) {
+                e.target.style.borderColor = '#e74c3c';
+            } else {
+                e.target.style.borderColor = '#27ae60';
+            }
+        });
+
+        // Animate elements on scroll
+        const observerOptions = {
+            threshold: 0.1,
+            rootMargin: '0px 0px -50px 0px'
+        };
+
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.style.opacity = '1';
+                    entry.target.style.transform = 'translateY(0)';
+                }
+            });
+        }, observerOptions);
+
+        document.querySelectorAll('.form-section').forEach(section => {
+            observer.observe(section);
+        });
+    </script>
+</body>
+</html>
+
+
+{% endblock %}
+
+
+
+{% comment %} <!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Course Form</title>
+  <style>
+    body { font-family: Arial, sans-serif; margin: 20px; }
+    label { display: block; margin-top: 10px; }
+    select, input, textarea { width: 100%; padding: 6px; margin-top: 4px; }
+  </style>
+</head>
+<body>
+  <h2>Course Details Form</h2>
+  <form method="post">
+    {% csrf_token %}
+
+    <label>School
+      <select name="school" required>
+        <option>School of Engineering and Technology</option>
+        <option>School of Computer Science and Technology</option>
+        <option>School of Sciences Arts Media and Management</option>
+        <option>School of Agriculture and Bio Sciences</option>
+      </select>
+    </label>
+
+    <label>Division
+      <select name="division" required>
+        <option>Aerospace Engineering</option>
+        <option>Agriculture</option>
+        <option>Bioinformatics</option>
+        <option>Biotechnology</option>
+        <option>Chemistry</option>
+        <option>Civil Engineering</option>
+        <option>Commerce</option>
+        <option>Computer Science and Engineering</option>
+        <option>Artificial Intelligence and Machine Learning</option>
+        <option>Data Science and Cyber Security</option>
+        <option>Electrical and Electronics Engineering</option>
+        <option>Electronics and Communication Engineering</option>
+        <option>Robotics</option>
+        <option>Biomedical Engineering</option>
+        <option>English</option>
+        <option>Food Processing</option>
+        <option>Information Technology</option>
+        <option>Management Studies</option>
+        <option>Mathematics</option>
+        <option>Mechanical Engineering</option>
+        <option>Media and Communication</option>
+        <option>Nano Sciences</option>
+        <option>Physics</option>
+        <option>Value Education</option>
+        <option>Water Institute</option>
+        <option>ISDF</option>
+        <option>Computer Application</option>
+        <option>Criminology</option>
+        <option>Digital Sciences</option>
+        <option>Data Science and Analytics</option>
+        <option>Clinical Psychology</option>
+        <option>Others</option>
+      </select>
+    </label>
+
+    <label>Year
+      <select name="year" required>
+        <option>I year</option>
+        <option>II year</option>
+        <option>III year</option>
+        <option>IV year</option>
+        <option>V year</option>
+      </select>
+    </label>
+
+    <label>Semester
+      <select name="semester" required>
+        <option>1</option><option>2</option><option>3</option><option>4</option>
+        <option>5</option><option>6</option><option>7</option><option>8</option>
+        <option>9</option><option>10</option>
+      </select>
+    </label>
+
+    <label>Degree
+      <select name="degree" required>
+        <option>B.Tech</option><option>M.Tech</option><option>B.Com</option>
+        <option>BCA</option><option>B.Sc</option><option>B.A</option>
+        <option>M.A</option><option>MBA</option><option>M.Sc</option>
+        <option>Research</option><option>Others</option>
+      </select>
+    </label>
+
+    <label>Branch
+      <select name="branch" required>
+        <!-- Same options as Division -->
+        <option>Aerospace Engineering</option>
+        <option>Agriculture</option>
+        <option>Bioinformatics</option>
+        <option>Biotechnology</option>
+        <option>Chemistry</option>
+        <option>Civil Engineering</option>
+        <option>Commerce</option>
+        <option>Computer Science and Engineering</option>
+        <option>Artificial Intelligence and Machine Learning</option>
+        <option>Data Science and Cyber Security</option>
+        <option>Electrical and Electronics Engineering</option>
+        <option>Electronics and Communication Engineering</option>
+        <option>Robotics</option>
+        <option>Biomedical Engineering</option>
+        <option>English</option>
+        <option>Food Processing</option>
+        <option>Information Technology</option>
+        <option>Management Studies</option>
+        <option>Mathematics</option>
+        <option>Mechanical Engineering</option>
+        <option>Media and Communication</option>
+        <option>Nano Sciences</option>
+        <option>Physics</option>
+        <option>Value Education</option>
+        <option>Water Institute</option>
+        <option>ISDF</option>
+        <option>Computer Application</option>
+        <option>Criminology</option>
+        <option>Digital Sciences</option>
+        <option>Data Science and Analytics</option>
+        <option>Clinical Psychology</option>
+        <option>Others</option>
+      </select>
+    </label>
+
+    <label>Course Code <input type="text" name="course_code" required></label>
+    <label>Course Name <input type="text" name="course_name" required></label>
+
+    <label>Credits
+      <select name="credits" required>
+        <option>0.5</option><option>1</option><option>1.5</option>
+        <option>2</option><option>2.5</option><option>3</option>
+        <option>4</option><option>Others</option>
+      </select>
+    </label>
+
+    <label>Batch No
+    <select name="batch_no" required>
+      {% for i in batch_range %}
+        <option value="{{ i }}">{{ i }}</option>
+      {% endfor %}
+    </select>
+  </label>
+
+    <label>Course Type
+      <select name="course_type" required>
+        <option>Theory</option><option>Practical</option><option>Placement</option>
+      </select>
+    </label>
+
+    <label>Mode
+      <select name="mode" required> 
+        <option>offline</option><option>blended</option>
+      </select>
+    </label>
+
+    <label>Faculty ID <input type="text" name="faculty_id" required></label>
+    <label>Faculty Name <input type="text" name="faculty_name" required></label>
+    <label>Faculty Contact Number <input type="tel" name="faculty_contact" required></label>
+    <label>Faculty Email ID <input type="email" name="faculty_email" required></label>
+
+    <label>Time Table (Day-Hour) <textarea name="timetable" rows="3" required></textarea></label>
+
+    <button type="submit" style="margin-top: 20px;">Submit</button>
+  </form>
+</body>
+</html> {% endcomment %}
+
+
+{% comment %} 
+<div class="login-wrapper">
+    <div class="login-box">
+        <center><div class="text-center mb-4">
+            <img src="{% static 'images/CTC_logo.png' %}" alt="CTC_logo" style="height: 80px;">
+        </div></center>
+
+         {% if form.errors %}
+            <div class="error">Invalid username or password</div>
+        {% endif %}
+        <form method="post" action="{% url 'login' %}">
+            {% csrf_token %}
+            <div class="form-group">
+                <label for="id_username">Username</label>
+                <input type="text" name="username" id="id_username" required>
+            </div>
+            <div class="form-group">
+                <label for="id_password">Password</label>
+                <input type="password" name="password" id="id_password" required>
+            </div>
+            <button type="submit" class="btn-login">Login</button>
+        </form> 
+        <p>Login is now closed.Please contact ctc</p>
+    </div>
+</div> {% endcomment %}
+
+
+
+
+{% comment %} <div class="login-wrapper">
+    <div class="login-box">
+        <center><div class="text-center mb-4">
+            <img src="{% static 'images/CTC_logo.png' %}" alt="CTC_logo" style="height: 80px;">
+        </div></center>
+
+        
+        <h6>Login has been closed as the time window for lab allotment has ended. For assistance, please contact the CTC office.</h6>
+    </div>
+</div> {% endcomment %}

@@ -1,0 +1,10 @@
+{% extends 'faculty/base.html' %}
+{% block content %}
+<h3 class="text-center fw-bold mb-4">Edit Lab Request</h3>
+<form method="post" novalidate>
+    {% csrf_token %}
+    {{ form.as_p }}
+    <button type="submit" class="btn btn-success">Update</button>
+    <a href="{% url 'faculty_lab_requests' %}" class="btn btn-secondary">Cancel</a>
+</form>
+{% endblock %}

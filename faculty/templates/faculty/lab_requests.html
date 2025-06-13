@@ -1,0 +1,105 @@
+{% extends "faculty/base.html" %}
+{% load static %}
+
+{% block content %}
+<div class="container mt-5">
+    <center><h3 class="mb-4">COMPUTER TECHNOLOGY CENTRE</h3></center>
+
+    <center><h3 class="mb-4">Lab Requirements for Odd Semester 2025 – 2026</h3></center></br>
+    {% if messages %}
+        {% for message in messages %}
+            <div class="alert alert-success alert-dismissible fade show" role="alert">
+                {{ message }}
+                   <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+            </div>
+        {% endfor %}
+    {% endif %}
+
+    {% if form.errors %}
+        <div class="alert alert-danger" role="alert">
+            <strong>Error!</strong> Please correct the errors below.
+        </div>
+    {% endif %}
+
+    {% if form.non_field_errors %}
+        <div class="alert alert-danger" role="alert">
+            {{ form.non_field_errors }}
+        </div>
+{% endif %}
+
+    <form method="post" class="row g-3 shadow p-4 rounded bg-white">
+        {% csrf_token %}
+        <div class="col-md-6">
+            <label for="id_department_name" class="form-label">Department Name</label>
+            {{ form.department_name }}
+        </div>
+       
+        <div class="col-md-6">
+            <label for="id_semester" class="form-label">Semester</label>
+            {{ form.semester }}
+        </div>
+        
+        <div class="col-md-6">
+            <label for="id_year" class="form-label">Year</label>
+            {{ form.year }}
+        </div>
+
+        <div class="col-md-6">
+            <label for="id_degree" class="form-label">Degree</label>
+            {{ form.degree }}
+        </div>
+
+        <div class="col-md-6">
+            <label for="id_" class="form-label">Programme</label>
+            {{ form.programme }}
+        </div>
+
+        <div class="col-md-6">
+            <label for="id_numberofcredits" class="form-label">Number of Credits</label>
+            {{ form.numberofcredits }}
+        </div>
+
+        <div class="col-md-6">
+            <label for="id_course_code" class="form-label">Course Code</label>
+            {{ form.course_code }}
+        </div>
+
+        <div class="col-md-6">
+            <label for="id_course_name" class="form-label">Course Name</label>
+            {{ form.course_name }}
+        </div>
+
+        <div class="col-md-6">
+            <label for="id_no_of_slots" class="form-label">No of Slots </label>
+            {{ form.num_slots }}
+        </div>
+
+        <div class="col-md-6">
+            <label for="id_no_of_slots" class="form-label">No of Batches</label>
+            {{ form.num_batches }}
+        </div>
+
+        <div class="col-md-12">
+            <label for="id_os_required_opensource" class="form-label">Operating System Required</label>
+            {{ form.os_required }}
+        </div>
+
+        <div class="col-md-6">
+            <label for="id_software_required_opensource" class="form-label">Software Required and Version(Open Source)</label>
+            {{ form.software_required_version_opensource }}
+        </div>
+
+        <div class="col-md-6">
+            <label for="id_software_required_license" class="form-label">Software Required and Version(License)</label>
+            {{ form.software_required_version_license }}
+        </div>
+        <div class="col-12">
+            <label for="id_remarks" class="form-label">Remarks</label>
+            {{ form.remarks }}
+        </div>
+        <div class="col-12">
+            <button type="submit" class="btn btn-primary">Submit Request</button>
+        </div>
+    </form>
+</div>
+{% endblock %}

@@ -1,0 +1,96 @@
+{% extends 'faculty/base.html' %}
+{% block content %}
+
+{% load static %}
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Course Entry List</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', sans-serif;
+            background: #f4f6f8;
+            padding: 20px;
+        }
+        .table-container {
+            background: white;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 0 15px rgba(0,0,0,0.1);
+            overflow-x: auto;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 10px;
+        }
+        table th, table td {
+            border: 1px solid #ddd;
+            padding: 10px;
+            text-align: center;
+        }
+        table th {
+            background-color: #1976d2;
+            color: white;
+        }
+        .btn-download {
+            display: inline-block;
+            margin-bottom: 15px;
+            {% comment %} margin:0px 20px 20px 20px; {% endcomment %}
+            padding: 10px 20px;
+            background-color: #388e3c;
+            color: white;
+            text-decoration: none;
+            border-radius: 6px;
+        }
+        .btn-download:hover {
+            background-color: #2e7d32;
+        }
+    </style>
+</head>
+<body>
+    <div class="table-container">
+        
+        <table>
+            <thead>
+                <tr>
+                    <th>Course Code</th>
+                    <th>Course Name</th>
+                    <th>Faculty</th>
+                    <th>School</th>
+                    <th>Degree</th>
+                    <th>Branch</th>
+                    <th>Semester</th>
+                    <th>Credits</th>
+                    <th>Batch</th>
+                    <th>Mode</th>
+                    <th>Type</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for course in courses %}
+                <tr>
+                    <td>{{ course.course_code }}</td>
+                    <td>{{ course.course_name }}</td>
+                    <td>{{ course.faculty_name }}</td>
+                    <td>{{ course.school }}</td>
+                    <td>{{ course.degree }}</td>
+                    <td>{{ course.branch }}</td>
+                    <td>{{ course.semester }}</td>
+                    <td>{{ course.credits }}</td>
+                    <td>{{ course.batch_no }}</td>
+                    <td>{{ course.mode }}</td>
+                    <td>{{ course.course_type }}</td>
+                </tr>
+                {% empty %}
+                <tr>
+                    <td colspan="11">No course entries available.</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+        
+    </div>
+</body>
+</html>
+{% endblock %}
