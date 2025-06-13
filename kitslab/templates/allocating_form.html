@@ -1,0 +1,119 @@
+{% extends 'base.html' %}
+
+{% block title %}Allocate Exam{% endblock %}
+
+{% block content %}
+<h3 class="text-center mb-4">Exam Allocation Form</h3>
+<form method="post" action="{% url 'confirm_allocation' %}" id="examForm">
+    {% csrf_token %}
+    <div class="mb-3">
+        <label class="form-label">Course Code</label>
+        <input type="text" id="course_code" name="course_code" class="form-control" value="{{ course_code }}" readonly>
+    </div>
+    <div class="mb-3">
+        <label class="form-label">Course Name</label>
+        <input type="text" id="course_name" name="course_name" class="form-control" value="{{ course_name }}" readonly>
+    </div>
+    <div class="mb-3">
+        <label class="form-label">Batch No</label>
+        <input type="text" id="batch_no" name="batch_no" class="form-control" value="{{ batch_no }}" readonly>
+    </div>
+    <div class="mb-3">
+        <label class="form-label">Date</label>
+        <input type="date" id="date" name="date" class="form-control" min="{{ min_date }}" required>
+    </div>
+    <div class="mb-3">
+        <label class="form-label">Session</label>
+        <select id="session" name="session" class="form-select" required>
+            <option value="">-- Select Session --</option>
+            <option value="Session-1">Session-1 [8am - 11am]</option>
+            <option value="Session-2">Session-2 [11am - 2pm]</option>
+            <option value="Session-3">Session-3 [2pm - 5pm]</option>
+        </select>
+    </div>
+    <div class="mb-3">
+        <label class="form-label">Lab Venue</label>
+        <select id="venue" name="lab_venue" class="form-select" required>
+            <option value="">-- Select Lab --</option>
+            {% for value, label in labs %}
+                <option value="{{ value }}">{{ label }}</option>
+            {% endfor %}
+        </select>
+    </div>
+    
+    <div class="mb-3 row align-items-center text-center">
+        <div class="col-md-3">
+            <button id="checkAvailabilityBtn" class="btn btn-info">Check Availability</button>
+        </div>
+        <div class="col-md-3">
+            <span id="statusLabel" class="status-label text-secondary">Status: Not Checked</span>
+        </div>
+        <div class="col-md-3">
+            <button id="confirmBtn" type="button" class="btn btn-success" disabled>Confirm Allotment</button>
+        </div>
+    </div>
+</form>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+$(document).ready(function() {
+    $('#checkAvailabilityBtn').click(function(e) {
+        e.preventDefault();
+        $.ajax({
+            url: "{% url 'check_availability' %}",
+            type: 'POST',
+            data: {
+                csrfmiddlewaretoken: '{{ csrf_token }}',
+                date: $('#date').val(),
+                session: $('#session').val(),
+                lab_venue: $('#venue').val(),  // ✅ match Django view
+
+                course_code: $('#course_code').val(),
+                course_name: $('#course_name').val(),
+                batch_no: $('#batch_no').val(),
+            },
+            success: function(response) {
+                let status = $('#statusLabel');
+                if (response.status === "Available") {
+                    status.text("Status: Available").removeClass().addClass("status-label text-success");
+                    $('#confirmBtn').prop('disabled', false);
+                } else {
+                    status.text("Status: Not Available").removeClass().addClass("status-label text-danger");
+                    $('#confirmBtn').prop('disabled', true);
+                }
+            },
+            error: function(xhr) {
+                alert("Error checking availability.");
+                console.error(xhr.responseText);
+            }
+        });
+    });
+
+    $('#confirmBtn').click(function(e) {
+        e.preventDefault();
+        $.ajax({
+            url: "{% url 'confirm_allocation' %}",
+            type: "POST",
+            data: {
+                date: $('input[name="date"]').val(),
+                session: $('select[name="session"]').val(),
+                lab_venue: $('select[name="lab_venue"]').val(),
+                course_code: $('input[name="course_code"]').val(),
+                course_name: $('input[name="course_name"]').val(),
+                batch_no: $('input[name="batch_no"]').val(),
+                csrfmiddlewaretoken: '{{ csrf_token }}',
+            },
+            success: function(response) {
+                if (response.success) {
+                    alert("✅ Successfully Allotted!");
+                    $('#confirmBtn').prop('disabled', true);
+                } else {
+                    alert("❌ Something went wrong!");
+                }
+            }
+        });
+    });
+});
+</script>
+{% endblock %}

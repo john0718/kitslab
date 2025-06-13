@@ -1,0 +1,80 @@
+{% extends 'base.html' %} 
+
+{% block content %}
+<div class="container mt-5">
+    {% if messages %}
+        {% for message in messages %}
+            <div class="alert alert-success alert-dismissible fade show" role="alert">
+                {{ message }}
+                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+            </div>
+        {% endfor %}
+    {% endif %}
+
+    <div class="table-responsive">
+        <table class="table table-bordered table-hover table-striped">
+            <thead class="tablehead text-white">
+                <tr>
+                    <th>Department</th>
+                    <th>Semester</th>
+                    <th>Year</th>
+                    <th>Degree</th>
+                    <th>Programme</th>
+                    <th>Number of Credits</th>
+                    <th>Course Code</th>
+                    <th>Course Name</th>
+                    <th>No of Slots</th>
+                    <th>No of Batches</th>
+                    <th>Operating System Required</th>
+                    <th>Software Required (Open Source)</th>
+                    <th>Software Required (License)</th>
+                    <th>Remarks</th>
+                    <th>Action</th>
+                </tr>
+            </thead>
+            <tbody class="tablebody">
+                {% if lab_requests|length == 0 %}
+                    <tr>
+                        <td colspan="15" class="text-center">No Lab Requests Found</td>
+                    </tr>
+                {% endif %}
+                {% for req in lab_requests %}
+                    <tr>
+                        <td>{{ req.department_name }}</td>
+                        <td>{{ req.semester }}</td>
+                        <td>{{ req.year }}</td>
+                        <td>{{ req.degree }}</td>
+                        <td>{{ req.programme }}</td>
+                        <td>{{ req.numberofcredits }}</td>
+                        <td>{{ req.course_code }}</td>
+                        <td>{{ req.course_name }}</td>
+                        <td>{{ req.num_slots }}</td>
+                        <td>{{ req.num_batches }}</td>
+                        <td>{{ req.os_required }}</td>
+                        <td>{{ req.software_required_version_opensource }}</td>
+                        <td>{{ req.software_required_version_license }}</td>
+                        <td>{{ req.remarks }}</td>
+                        <td>
+                            {% if req.assigned_date %}
+                                <span class="badge bg-success">Assigned: {{ req.assigned_date|date:"Y-m-d" }}</span>
+                            {% else %}
+                                <a href="{% url 'assign_course' req.id %}" class="btn btn-sm btn-primary">Assign</a>
+                            {% endif %}
+                        </td>
+                    </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+
+    <!-- Buttons Row -->
+    <div class="d-flex justify-content-end flex-wrap gap-2 mt-3">
+        <a href="{% url 'download_lab_requests' %}" class="btn btn-sm btn-primary">
+            Download Lab Requests
+        </a>
+        <a href="{% url 'download_assigned_courses' %}" class="btn btn-sm btn-primary">
+            Download Assigned Courses
+        </a>
+    </div>
+</div>
+{% endblock %}

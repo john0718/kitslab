@@ -1,0 +1,21 @@
+{% extends 'base.html' %}
+{% block content %}
+<div class="container my-5">
+    <div class="card p-4 shadow rounded-3">
+        <h3 class="text-center mb-4">Upload Excel to Add Credentials</h3>
+        <form method="post" enctype="multipart/form-data">
+            {% csrf_token %}
+            {{ form.as_p }}
+            <button type="submit" class="btn btn-primary">Upload</button>
+        </form>
+
+        {% if messages %}
+        <ul class="mt-3">
+            {% for message in messages %}
+                <li class="text-{{ message.tags }}">{{ message }}</li>
+            {% endfor %}
+        </ul>
+        {% endif %}
+    </div>
+</div>
+{% endblock %}

@@ -1,0 +1,240 @@
+{% load static %}
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <link rel="icon" type="image/png" href="https://karunya.edu/sites/default/files/img/home/KITS-EMBLEM.png.pagespeed.ce.hVclQGVmrR.png">
+    <title>{% block title %}Lab Coordinator Panel{% endblock %}</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+    <style>
+        body, html {
+            height: 100%;
+            margin: 0;
+            
+        }
+
+        .container.my-5 {
+            margin: 0 !important;
+            padding: 0 !important;
+          }
+          
+          .card.shadow.rounded-4 {
+            margin: 0 !important;
+          }
+          
+          .card-body {
+            padding: 1rem !important; 
+          }
+    
+        {% comment %} .wrapper {
+            display: flex;
+            flex-direction: row;
+            height: 100%;
+            padding-top: 56px; 
+        }
+     {% endcomment %}
+        {% comment %} .sidebar {
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            width: 200px;
+            background-color: #343a40;
+            padding: 1rem;
+            position: fixed;
+            height: calc(100% - 56px);
+            top: 56px;
+            left: 0;
+            overflow-y: auto;
+            transition: transform 0.3s ease;
+        } {% endcomment %}
+
+
+        .sidebar {
+            position: fixed;
+            top: 56px;
+            left: 0;
+            height: calc(100vh - 56px);
+            width: 250px;
+            background-color: #343a40;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: flex-start;
+            padding: 1rem;
+            overflow-y: auto;
+            transition: transform 0.3s ease;
+    }
+         .sidebar a,
+            .sidebar button {
+            color: #ffffff;
+            text-decoration: none;
+            font-size: 16px;
+            margin-bottom: 10px;
+            padding: 10px 15px;
+            border: none;
+            background: none;
+            width: 100%;
+            text-align: left;
+            border-radius: 4px;
+            display: block;
+            }
+
+            .sidebar a:hover,
+            .sidebar button:hover {
+            background-color: #495057;
+            color: #ffc107;
+            }   
+
+            .sidebar .disabled-link {
+                pointer-events: none;
+                color: gray;
+                cursor: not-allowed;
+                }
+        {% comment %} .sidebar a {
+            color: #ffffff;
+            padding: 10px 15px;
+            text-decoration: none;
+            font-size: 18px;
+            border-radius: 4px;
+            margin-bottom: 5px;
+            transition: background-color 0.3s, color 0.3s;
+        }
+        
+        .sidebar a:hover {
+            background-color: #495057;
+            color: #ffc107; 
+        } {% endcomment %}
+        
+        .sidebar.active {
+            transform: translateX(0);
+        }
+        .dropdown-container {
+            display: none;
+            padding-left: 15px;
+            }
+
+        .dropdown-active {
+            display: block !important;
+        }    
+    
+        .content {
+            margin-left: 200px;
+            padding: 2rem;
+            flex-grow: 1; 
+            margin-top:none;
+        }
+    
+        .navbar-toggler {
+            display: none;
+        }
+
+        .tablehead th {
+            background-color: #343a40;
+            color: white;
+            text-align: center;
+            white-space: nowrap;     
+            vertical-align: middle;  
+            padding: 10px;           
+        }
+
+        .tablebody td {
+            text-align: center;
+            vertical-align: middle;
+            white-space: nowrap;
+            padding: 10px;
+        }
+        
+    
+        /* Mobile View */
+        @media (max-width: 768px) {
+            
+            .sidebar {
+                transform: translateX(-100%); 
+                z-index: 1000;
+            }
+            .sidebar.active {
+                transform: translateX(0); 
+            }
+            .content {
+                margin-left: 0;
+            }
+            .navbar-toggler {
+                display: block;
+            }
+        }
+        @media (min-width: 768px) {
+            body, html {
+                overflow-x: hidden;
+            }
+        }
+        
+        
+    </style>
+    
+    {% block extra_head %}{% endblock %}
+</head>
+<body>
+   
+    <nav class="navbar navbar-dark bg-dark fixed-top">
+        <div class="container-fluid">
+            <button class="navbar-toggler" type="button" id="menu-toggle">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <span class="navbar-brand mb-0 h1">Lab Coordinator</span>
+    
+            {% if user.is_authenticated %}
+            <form action="{% url 'logout' %}" method="post" style="display: inline;">
+                {% csrf_token %}
+                <button type="submit" class="btn btn-outline-light">Logout</button>
+            </form>
+            {% endif %}
+        </div>
+    </nav>
+    
+    
+        <div class="sidebar" id="sidebar">
+            <a href="{% url 'faculty_dashboard' %}">Dashboard</a>
+            {% comment %} <a href="{% url 'faculty_dashboard' %}">Dashboard</a>
+            <a href="{% url 'division_requests' %}">Division Requests</a>
+            <a href="{% url 'course_allotment' %}">Course Allotment</a>
+            <a href="{% url 'credentials_generation' %}">Credentials Generation</a>
+            <a href="{% url 'credentials_manager' %}">Credentials Manager</a> {% endcomment %}
+            <a href="{% url 'course_entry_list' %}">GCR Allotment</a>
+
+          <button onclick="toggleDropdown('labDropdown')">Lab Allocation</button>
+                    <div class="dropdown-container" id="labDropdown">
+                        <a href="{% url 'division_requests'%}">Division Requests</a>
+                        <a href="{% url 'credentials_generation' %}" class="disabled-link">Credentials Generation</a>
+                        <a href="{% url 'credentials_manager' %}"class="disabled-link">Credentials Manager</a>
+                        
+                    </div>
+        </div>
+  
+  
+  
+    
+        <div class="content">
+            <center><div class="text-center mb-4">
+                <img src="{% static 'images/CTC_logo.png' %}" alt="CTC_logo" style="height: 80px; margin-top: 30px; margin-bottom: 10px;">
+            </div></center>
+            {% block content %}{% endblock %}
+        </div>
+    
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script>
+        $(document).ready(function(){
+            $("#menu-toggle").click(function(){
+                $("#sidebar").toggleClass("active");
+            });
+        });
+
+        function toggleDropdown(id) {
+            const dropdown = document.getElementById(id);
+            dropdown.classList.toggle('dropdown-active');
+        }
+    </script>
+
+{% block extra_js %}{% endblock %}
+    </body>
+</html>
